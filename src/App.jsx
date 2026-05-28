@@ -6,6 +6,7 @@ import Servicios from './pages/Servicios';
 import Cotizar from './pages/Cotizar';
 import Rastreo from './pages/Rastreo';
 import Login from './pages/Login';
+import Registro from './pages/Registro';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/cotizar" element={<Cotizar />} />
             <Route path="/rastreo" element={<Rastreo />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
           </Routes>
         </main>
         <Footer />

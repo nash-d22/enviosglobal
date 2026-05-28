@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Package, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { userService } from '../services/userService';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,40 +17,43 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulando una llamada a API
-    setTimeout(() => {
-      if (formData.email && formData.password) {
-        // Guardar en LocalStorage para persistencia simulada
-        const userData = {
-          email: formData.email,
-          name: formData.email.split('@')[0],
-          token: 'fake-jwt-token-' + Math.random()
-        };
-        localStorage.setItem('user_session', JSON.stringify(userData));
+    try {
+      // Intento de login real contra el backend
+      const user = await userService.login(formData.email, formData.password);
 
-        Swal.fire({
-          title: '¡Bienvenido!',
-          text: 'Sesión iniciada correctamente',
-          icon: 'success',
-          confirmButtonColor: '#004aad',
-          timer: 2000,
-          showConfirmButton: false
-        }).then(() => {
-          setLoading(false);
-          navigate('/');
-          // Disparar evento para que el Navbar se actualice
-          window.dispatchEvent(new Event('storage'));
-        });
-      } else {
+      // Guardar en LocalStorage para persistencia
+      const userData = {
+        id: user.ideusuario,
+        email: user.gmail,
+        name: user.nombre,
+        rol: user.rol,
+        token: 'auth-token-' + user.ideusuario // Token simulado ya que no hay JWT real aún
+      };
+      localStorage.setItem('user_session', JSON.stringify(userData));
+
+      Swal.fire({
+        title: '¡Bienvenido!',
+        text: `Sesión iniciada correctamente como ${user.nombre}`,
+        icon: 'success',
+        confirmButtonColor: '#004aad',
+        timer: 2000,
+        showConfirmButton: false
+      }).then(() => {
         setLoading(false);
-        Swal.fire({
-          title: 'Error',
-          text: 'Por favor completa todos los campos',
-          icon: 'error',
-          confirmButtonColor: '#004aad'
-        });
-      }
-    }, 1500);
+        navigate('/');
+        window.dispatchEvent(new Event('storage'));
+      });
+    } catch (error) {
+      setLoading(false);
+      Swal.fire({
+        title: 'Error de Acceso',
+        text: error.message === 'Credenciales incorrectas' 
+          ? 'Correo o contraseña no válidos' 
+          : 'No se pudo conectar con el servidor backend',
+        icon: 'error',
+        confirmButtonColor: '#004aad'
+      });
+    }
   };
 
   return (
