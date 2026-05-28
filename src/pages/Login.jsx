@@ -45,11 +45,19 @@ const Login = () => {
       });
     } catch (error) {
       setLoading(false);
+      console.error('Error en login:', error);
+      
+      let errorMessage = 'No se pudo conectar con el servidor backend';
+      
+      if (error.message === 'Credenciales incorrectas') {
+        errorMessage = 'Correo o contraseña no válidos';
+      } else if (error.response?.data) {
+        errorMessage = typeof error.response.data === 'string' ? error.response.data : 'Error en el servidor';
+      }
+
       Swal.fire({
         title: 'Error de Acceso',
-        text: error.message === 'Credenciales incorrectas' 
-          ? 'Correo o contraseña no válidos' 
-          : 'No se pudo conectar con el servidor backend',
+        text: errorMessage,
         icon: 'error',
         confirmButtonColor: '#004aad'
       });
