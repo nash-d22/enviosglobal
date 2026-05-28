@@ -41,7 +41,7 @@ const Footer = () => {
           <div>
             <h4 className="font-bold mb-6 text-gray-900">Contacto</h4>
             <ul className="space-y-4 text-sm text-gray-500">
-              <li className="flex items-center gap-2"><Phone size={16} className="text-primary" /> 01 8000 910 111</li>
+              <li className="flex items-center gap-2"><Phone size={16} className="text-primary" /> 57 310 12345678</li>
               <li className="flex items-center gap-2"><Mail size={16} className="text-primary" /> contacto@enviosglobal.com</li>
               <li className="flex items-center gap-2"><MapPin size={16} className="text-primary" /> Av. El Dorado #103-22, Bogotá</li>
             </ul>

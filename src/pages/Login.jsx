@@ -1,18 +1,55 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Package, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Iniciando sesión con:', formData);
-    // Aquí iría la lógica de autenticación
+    setLoading(true);
+
+    // Simulando una llamada a API
+    setTimeout(() => {
+      if (formData.email && formData.password) {
+        // Guardar en LocalStorage para persistencia simulada
+        const userData = {
+          email: formData.email,
+          name: formData.email.split('@')[0],
+          token: 'fake-jwt-token-' + Math.random()
+        };
+        localStorage.setItem('user_session', JSON.stringify(userData));
+
+        Swal.fire({
+          title: '¡Bienvenido!',
+          text: 'Sesión iniciada correctamente',
+          icon: 'success',
+          confirmButtonColor: '#004aad',
+          timer: 2000,
+          showConfirmButton: false
+        }).then(() => {
+          setLoading(false);
+          navigate('/');
+          // Disparar evento para que el Navbar se actualice
+          window.dispatchEvent(new Event('storage'));
+        });
+      } else {
+        setLoading(false);
+        Swal.fire({
+          title: 'Error',
+          text: 'Por favor completa todos los campos',
+          icon: 'error',
+          confirmButtonColor: '#004aad'
+        });
+      }
+    }, 1500);
   };
 
   return (
@@ -99,10 +136,17 @@ const Login = () => {
 
           <button
             type="submit"
-            className="group relative w-full flex justify-center items-center gap-2 py-4 px-4 border border-transparent text-sm font-bold rounded-2xl text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-lg shadow-primary/20 cursor-pointer"
+            disabled={loading}
+            className={`group relative w-full flex justify-center items-center gap-2 py-4 px-4 border border-transparent text-sm font-bold rounded-2xl text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-lg shadow-primary/20 cursor-pointer ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
-            Iniciar Sesión
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <>
+                Iniciar Sesión
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </>
+            )}
           </button>
         </form>
 
