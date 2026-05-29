@@ -71,6 +71,11 @@ const Navbar = () => {
             
             {user ? (
               <div className="flex items-center gap-4">
+                <Link to="/mis-paquetes" className="flex items-center gap-2 text-secondary font-bold hover:text-secondary/80 transition-colors">
+                  <Package size={20} />
+                  <span>Mis Envíos</span>
+                </Link>
+                <div className="h-6 w-[1px] bg-gray-200"></div>
                 <div className="flex items-center gap-2 text-primary font-bold">
                   <User size={20} />
                   <span className="capitalize">{user.name}</span>
@@ -109,6 +114,14 @@ const Navbar = () => {
           
           {user ? (
             <div className="pt-4 border-t border-gray-100">
+              <Link 
+                to="/mis-paquetes" 
+                className="flex items-center gap-3 text-secondary font-bold mb-4"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Package size={20} />
+                <span>Mis Envíos</span>
+              </Link>
               <div className="flex items-center gap-3 text-primary font-bold mb-4">
                 <User size={20} />
                 <span className="capitalize">{user.name}</span>
